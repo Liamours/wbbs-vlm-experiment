@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wbbs-vlm"
+version = "0.1.0"
+description = "Standalone WBBS VQA and visual-grounding dataset pipeline"
+requires-python = ">=3.11"
+dependencies = [
+  "pillow>=10.0",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+analysis = [
+  "numpy>=1.26",
+  "scikit-learn>=1.5",
+]
+training = [
+  "accelerate>=1.0",
+  "bitsandbytes>=0.43",
+  "huggingface-hub>=1.24",
+  "peft>=0.14",
+  "torch==2.12.1",
+  "torchvision==0.27.1",
+  "transformers>=4.50",
+  "tqdm>=4.66",
+]
+eval = [
+  "sacrebleu>=2.4",
+  "nltk>=3.9",
+  "bert-score>=0.3.13",
+  "rouge-score>=0.1.2",
+]
+dev = ["pytest>=8.0"]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu130", marker = "sys_platform == 'win32'" }]
+torchvision = [{ index = "pytorch-cu130", marker = "sys_platform == 'win32'" }]
+
+[project.scripts]
+wbbs-build-dataset = "preprocess.pipeline:main"
+wbbs-build-r0 = "preprocess.release:main"
+wbbs-build-review = "preprocess.review:main"
+wbbs-build-gold = "preprocess.gold:main"
+wbbs-validate = "analysis.validate:main"
+wbbs-audit = "analysis.audit:main"
+wbbs-audit-qwen3 = "analysis.qwen_schema:main"
+wbbs-audit-qwen3-multitask = "analysis.qwen_multitask:main"
+wbbs-build-qwen-probe = "analysis.qwen_probe:main"
+wbbs-review-audit = "analysis.review:main"
+wbbs-evaluate = "metric.evaluate:main"
+wbbs-publish-audit = "analysis.publish:main"
+wbbs-benchmark-dataset = "analysis.benchmark:main"
+wbbs-prior-baselines = "analysis.priors:main"
+wbbs-contact-sheet = "analysis.contact_sheet:main"
+wbbs-export-paligemma = "postprocess.paligemma:main"
+wbbs-export-bbx = "postprocess.bbx:main"
+wbbs-export-qwen3 = "postprocess.qwen:main"
+vlm-train = "training.train:main"
+wbbs-prepare-baselines = "training.prepare:main"
+wbbs-predict = "training.predict:main"
+wbbs-evaluate-qwen3 = "metric.qwen:main"
+wbbs-evaluate-full = "metric.full_report:main"
+qwen3vl-train = "training.qwen:main"
+qwen3vl-predict = "training.qwen:predict_main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

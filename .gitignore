@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Data and runs are local artifacts.
+data/*
+!data/README.md
+runs/
+tmp/
+
+# Optional repositories are never imported by this project.
+external/*
+!external/README.md
+
+# Secrets
+.env

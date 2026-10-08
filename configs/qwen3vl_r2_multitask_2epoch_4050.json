@@ -1,0 +1,32 @@
+{
+  "model_id": "Qwen/Qwen3-VL-2B-Instruct",
+  "task": "multitask",
+  "output_schema": "multitask_json",
+  "selection_metric": "multitask_macro",
+  "sampling": {"mode": "epoch_uniform"},
+  "train_jsonl": "datasets/model_exports/qwen3_json/r2/multitask_train.jsonl",
+  "eval_jsonl": "datasets/model_exports/qwen3_json/r2/multitask_val.jsonl",
+  "adapter": {
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "runtime": {
+    "output_dir": "models/r2-multitask-qwen3vl-2b-json-2epoch",
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "learning_rate": 0.00002,
+    "epochs": 2,
+    "max_target_tokens": 160,
+    "min_pixels": 50176,
+    "max_pixels": 100352,
+    "gradient_checkpointing": true,
+    "seed": 4050,
+    "eval_batches": 0,
+    "validation_interval": 0,
+    "checkpoint_interval": 0,
+    "inference_batch_size": 32,
+    "logging_interval": 100
+  }
+}

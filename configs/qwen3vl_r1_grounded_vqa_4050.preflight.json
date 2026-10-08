@@ -1,0 +1,25 @@
+{
+  "model_id": "Qwen/Qwen3-VL-2B-Instruct",
+  "task": "grounded_vqa",
+  "train_jsonl": "datasets/model_exports/qwen3/r1/grounded_vqa_train.jsonl",
+  "eval_jsonl": "datasets/model_exports/qwen3/r1/grounded_vqa_val.jsonl",
+  "adapter": {
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "runtime": {
+    "output_dir": "models/preflight/qwen3vl-r1-grounded-vqa",
+    "batch_size": 1,
+    "gradient_accumulation": 1,
+    "learning_rate": 0.00002,
+    "max_steps": 1,
+    "max_target_tokens": 160,
+    "min_pixels": 50176,
+    "max_pixels": 100352,
+    "gradient_checkpointing": true,
+    "seed": 4050,
+    "eval_batches": 1
+  }
+}

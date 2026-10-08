@@ -1,0 +1,26 @@
+{
+  "model_id": "google/paligemma-3b-pt-224",
+  "task": "grounded_vqa",
+  "train_jsonl": "datasets/model_exports/r1/anatomy_grounded_vqa_train.jsonl",
+  "eval_jsonl": "datasets/model_exports/r1/anatomy_grounded_vqa_val.jsonl",
+  "quantization": "4bit",
+  "adapter": {
+    "method": "lora",
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "v_proj"]
+  },
+  "runtime": {
+    "output_dir": "models/r1-anatomy-grounded-vqa-paligemma",
+    "batch_size": 1,
+    "gradient_accumulation": 16,
+    "learning_rate": 0.0001,
+    "max_steps": 1000,
+    "max_prompt_tokens": 96,
+    "max_target_tokens": 96,
+    "gradient_checkpointing": true,
+    "seed": 4050,
+    "eval_batches": 128
+  }
+}

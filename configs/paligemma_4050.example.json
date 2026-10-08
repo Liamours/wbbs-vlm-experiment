@@ -1,0 +1,24 @@
+{
+  "model_id": "google/paligemma-3b-pt-224",
+  "task": "vqa",
+  "train_jsonl": "datasets/example/train.jsonl",
+  "quantization": "4bit",
+  "adapter": {
+    "method": "lora",
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "v_proj"]
+  },
+  "runtime": {
+    "output_dir": "models/paligemma-vqa-4050",
+    "batch_size": 1,
+    "gradient_accumulation": 16,
+    "learning_rate": 0.0001,
+    "max_steps": 100,
+    "max_prompt_tokens": 64,
+    "max_target_tokens": 128,
+    "gradient_checkpointing": true,
+    "seed": 7
+  }
+}

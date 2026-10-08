@@ -1,0 +1,12 @@
+{
+  "release": "r1",
+  "split_seed": 4050,
+  "evaluation_warning_minimum_abnormal_pairs": 5,
+  "include_lesion_tasks": true,
+  "write_visual_qa_contact_sheet": true,
+  "exclude_low_precision_regions": true,
+  "exclude_known_artifacts": true,
+  "exclude_outlier_images": true,
+  "exclude_corrupt_images": true,
+  "exclude_missing_images": true
+}
