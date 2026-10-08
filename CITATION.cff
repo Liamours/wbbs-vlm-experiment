@@ -14,7 +14,7 @@ authors:
 repository-code: https://github.com/Liamours/wbbs-vlm-experiment
 date-released: 2026-10-08
 references:
-  - type: dataset
+  - type: data
     title: "ScintiGround-38K: Derived Annotations for Grounded Visual Question Answering on Paired Anterior-Posterior Whole-Body Bone Scintigraphy"
     authors:
       - family-names: Azhad
