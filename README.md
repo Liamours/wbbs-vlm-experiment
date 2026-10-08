@@ -4,7 +4,7 @@ Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded vi
 
 ## The benchmark
 
-ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior scan, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates.
+ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior scan, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
 
 | Task | Required output | Train | Validation | Test | Total |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -75,7 +75,7 @@ Predicting the locked test split again with the same Qwen3-VL adapter, without r
 
 ## Reproduce
 
-The code expects a project folder with `datasets/` and `models/` next to `repo/` (set `WBBS_PROJECT_ROOT` to use another location). The images, the derived annotations, and the model weights are not in this repository.
+The code expects a project folder with `datasets/` and `models/` next to `repo/` (set `WBBS_PROJECT_ROOT` to use another location). The images and model weights are not in this repository. The derived annotations are on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
 
 ```powershell
 uv sync --extra training --extra dev --extra analysis --extra eval
@@ -93,5 +93,10 @@ uv run python scripts/score_locked_test.py --expected <multitask_test.jsonl> --p
 | --- | --- |
 | BS-80K (Huang et al., Comput Biol Med 151:106221, 2022) | no license stated; images are not redistributed |
 | LIBS-160K (Wei, figshare, DOI 10.6084/m9.figshare.28715375) | CC BY 4.0 |
+| ScintiGround-38K annotations (this work, Zenodo) | CC BY 4.0 |
 
 For research use only, not for clinical decisions. A code license has not been chosen yet. See `CONTRIBUTING.md` for annotation corrections.
+
+## Citation
+
+Cite the dataset record ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)); CITATION.cff has the entry.

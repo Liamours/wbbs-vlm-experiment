@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: If you use this code or the benchmark, please cite the dataset record.
+title: wbbs-vlm-experiment
+type: software
+authors:
+  - family-names: Azhad
+    given-names: M. Rifqi Dzaky
+    orcid: https://orcid.org/0009-0009-8448-9678
+    affiliation: Telkom University
+  - family-names: Rachmawati
+    given-names: Ema
+    orcid: https://orcid.org/0000-0003-3693-7228
+    affiliation: Telkom University
+repository-code: https://github.com/Liamours/wbbs-vlm-experiment
+date-released: 2026-10-08
+references:
+  - type: dataset
+    title: "ScintiGround-38K: Derived Annotations for Grounded Visual Question Answering on Paired Anterior-Posterior Whole-Body Bone Scintigraphy"
+    authors:
+      - family-names: Azhad
+        given-names: M. Rifqi Dzaky
+      - family-names: Rachmawati
+        given-names: Ema
+    doi: 10.5281/zenodo.23233758
+    year: 2026
+    version: 1.0.0
+    license: CC-BY-4.0
