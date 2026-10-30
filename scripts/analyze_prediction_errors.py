@@ -21,7 +21,7 @@ from project_paths import PROJECT_ROOT as ROOT
 TEST_MANIFEST = ROOT / "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl"
 MODELS = {
     "qwen3vl": ROOT / "results/inferences/r3-reported/qwen3vl/test/predictions.jsonl",
-    "paligemma": ROOT / "results/inferences/r3-reported/paligemma-latest/test/predictions.jsonl",
+    "paligemma": ROOT / "results/inferences/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070/evaluation/best/test/predictions.jsonl",
 }
 OUTPUT_DIR = ROOT / "results/analyses/error_analysis"
 ABNORMAL_LABELS = {"yes", "abnormal"}
