@@ -1,14 +1,14 @@
 $ErrorActionPreference = 'Stop'
 Set-Location (Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)))
 $out = "temp\wbbs-r3-results-standardized"
-$zip = "results\inferences\wbbs-r3-results-standardized.zip"
+$zip = "results\inferences\r3-reported\wbbs-r3-results-standardized.zip"
 Remove-Item -Recurse -Force $out -ErrorAction SilentlyContinue
 
 $sources = @{
-  "qwen3vl/val"       = "results\inferences\r3-unified-qwen3vl-2b-2epoch-5070\evaluation\best\validation"
-  "qwen3vl/test"      = "results\inferences\r3-unified-qwen3vl-2b-2epoch-5070\evaluation\best\test"
-  "paligemma/val"     = "results\inferences\r3-multitask-paligemma-3b-2epoch-5070\evaluation\best\validation"
-  "paligemma/test"    = "results\inferences\r3-multitask-paligemma-3b-2epoch-5070\evaluation\best\test"
+  "qwen3vl/val"       = "results\inferences\r3-qwen3vl\r3-unified-qwen3vl-2b-2epoch-5070\evaluation\best\validation"
+  "qwen3vl/test"      = "results\inferences\r3-qwen3vl\r3-unified-qwen3vl-2b-2epoch-5070\evaluation\best\test"
+  "paligemma/val"     = "results\inferences\r3-paligemma\r3-multitask-paligemma-3b-2epoch-5070\evaluation\best\validation"
+  "paligemma/test"    = "results\inferences\r3-paligemma\r3-multitask-paligemma-3b-2epoch-5070\evaluation\best\test"
 }
 
 foreach ($pair in $sources.GetEnumerator()) {
