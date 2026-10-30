@@ -28,7 +28,7 @@ from training.qwen_config import load_qwen_experiment  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 from project_paths import PROJECT_ROOT as ROOT
-TEST_MANIFEST = ROOT / "datasets/model_exports/qwen3_json/r3/multitask_test.jsonl"
+TEST_MANIFEST = ROOT / "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl"
 REAL_PREDICTIONS = ROOT / "results/inferences/qwen3vl/test/predictions.jsonl"
 CONFIG = REPO / "configs/qwen3vl_r3_multitask_2epoch_5070_fast.json"
 ADAPTER = ROOT / "models/r3-unified-qwen3vl-2b-2epoch-5070/best"

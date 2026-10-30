@@ -1,6 +1,6 @@
 # Dataset download scripts
 
-The standardized comparison files these scripts write to `datasets/benchmarks/` are archived at `archive/datasets/benchmarks/`; re-running a script recreates them in `datasets/benchmarks/`.
+The standardized comparison files these scripts write to `datasets/benchmarks/` were deleted on 2026-10-30; re-running a script after a fresh download recreates them in `datasets/benchmarks/`.
 
 ## HEAL-MedVQA
 

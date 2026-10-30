@@ -16,9 +16,9 @@ def build_source_inventory(dataset_root: str | Path) -> dict[str, Any]:
         _tree_entry(root, "nidus_annotations_post", "bs80k-lesion-bb/post", ".xml"),
         _tree_entry(root, "whole_body_images_ant", "bs80k-imaging-raw/wholeBodyANT", ".jpg", digest=False),
         _tree_entry(root, "whole_body_images_post", "bs80k-imaging-raw/wholeBodyPOST", ".jpg", digest=False),
-        _file_entry(root, "libs_text_train", "libs160k-imaging-raw/LIBS-160K-EN/train/train_texts.jsonl", json_rows=True),
-        _file_entry(root, "libs_text_test", "libs160k-imaging-raw/LIBS-160K-EN/train/test_texts.jsonl", json_rows=True),
-        _file_entry(root, "libs_text_valid", "libs160k-imaging-raw/LIBS-160K-EN/valid/valid_texts.jsonl", json_rows=True),
+        _file_entry(root, "libs_text_train", "libs160k-texts/LIBS-160K-EN/train/train_texts.jsonl", json_rows=True),
+        _file_entry(root, "libs_text_test", "libs160k-texts/LIBS-160K-EN/train/test_texts.jsonl", json_rows=True),
+        _file_entry(root, "libs_text_valid", "libs160k-texts/LIBS-160K-EN/valid/valid_texts.jsonl", json_rows=True),
     ]
     return {
         "schema_version": "wbbs-source-inventory/v1",

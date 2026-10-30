@@ -17,4 +17,4 @@ AUDITS = PROJECT_ROOT / "results/analyses/dataset-audits"
 os.environ.setdefault("HF_HUB_CACHE", str(BASE_MODELS / "hub"))
 
 # METEOR needs WordNet; keep it in the project instead of the user folder.
-os.environ.setdefault("NLTK_DATA", str(SOURCES / "nltk_data"))
+os.environ.setdefault("NLTK_DATA", str(PROJECT_ROOT / "external" / "nltk_data"))

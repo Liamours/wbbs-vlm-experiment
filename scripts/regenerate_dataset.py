@@ -59,7 +59,7 @@ def compare(built: Path, frozen: Path) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, default=PROJECT_ROOT / "temp/regenerated")
-    parser.add_argument("--frozen-export", type=Path, default=DATASETS / "model_exports/qwen3_json/r3")
+    parser.add_argument("--frozen-export", type=Path, default=DATASETS / "training-exports/qwen3_json/r3")
     args = parser.parse_args()
     if args.staging.exists():
         raise SystemExit(f"Staging already exists: {args.staging}")

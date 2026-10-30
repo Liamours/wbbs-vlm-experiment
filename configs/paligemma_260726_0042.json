@@ -1,8 +1,8 @@
 {
   "model_id": "google/paligemma-3b-pt-224",
   "task": "multitask",
-  "train_jsonl": "datasets/model_exports/qwen3_json/r3/multitask_train.jsonl",
-  "eval_jsonl": "datasets/model_exports/qwen3_json/r3/multitask_val.jsonl",
+  "train_jsonl": "datasets/training-exports/qwen3_json/r3/multitask_train.jsonl",
+  "eval_jsonl": "datasets/training-exports/qwen3_json/r3/multitask_val.jsonl",
   "quantization": "4bit",
   "adapter": {
     "method": "lora",

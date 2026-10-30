@@ -102,7 +102,7 @@ def run_r3_priors(release: str | Path, output: str | Path) -> dict[str, Any]:
         summary["jobs"][name] = results
     # Pooled aggregates: bone_region + metastasis (+ whole_body for vqa) rows
     # combined, matching exactly the row composition of the shared VLM test sets
-    # (datasets/model_exports/qwen3_json/r3/*.jsonl) so heuristic and image-based
+    # (datasets/training-exports/qwen3_json/r3/*.jsonl) so heuristic and image-based
     # baselines are compared on identical evaluation rows.
     for task in ("vqa", "grounding", "grounded_vqa"):
         results = {}

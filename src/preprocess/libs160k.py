@@ -47,9 +47,9 @@ LIBS_TEMPLATE_LAYOUT = {
     39: ("left chest", "normal"),
 }
 TEXT_FILES = (
-    "libs160k-imaging-raw/LIBS-160K-EN/train/train_texts.jsonl",
-    "libs160k-imaging-raw/LIBS-160K-EN/train/test_texts.jsonl",
-    "libs160k-imaging-raw/LIBS-160K-EN/valid/valid_texts.jsonl",
+    "libs160k-texts/LIBS-160K-EN/train/train_texts.jsonl",
+    "libs160k-texts/LIBS-160K-EN/train/test_texts.jsonl",
+    "libs160k-texts/LIBS-160K-EN/valid/valid_texts.jsonl",
 )
 
 

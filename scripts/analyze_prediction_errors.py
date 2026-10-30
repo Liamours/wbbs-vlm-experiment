@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from postprocess.qwen import parse_qwen_multitask_json_prediction  # noqa: E402
 
 from project_paths import PROJECT_ROOT as ROOT
-TEST_MANIFEST = ROOT / "datasets/model_exports/qwen3_json/r3/multitask_test.jsonl"
+TEST_MANIFEST = ROOT / "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl"
 MODELS = {
     "qwen3vl": ROOT / "results/inferences/qwen3vl/test/predictions.jsonl",
     "paligemma": ROOT / "results/inferences/paligemma-latest/test/predictions.jsonl",

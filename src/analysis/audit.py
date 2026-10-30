@@ -674,7 +674,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--raw-root",
         type=Path,
-        default=SOURCES / "libs160k-imaging-raw",
+        default=SOURCES / "libs160k-texts",
     )
     parser.add_argument(
         "--output-root",

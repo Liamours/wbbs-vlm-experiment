@@ -11,8 +11,8 @@ $config = "$root\configs\qwen3vl_r2_grounded_vqa_4050.json"
 $adapter = 'models\r2-grounded-vqa-qwen3vl-2b-json'
 $results = $adapter -replace '^models', 'results\inferences'
 New-Item -ItemType Directory -Force $results | Out-Null
-$test = 'datasets\model_exports\qwen3_json\r2\grounded_vqa_test.jsonl'
-$validation = 'datasets\model_exports\qwen3_json\r2\grounded_vqa_val.jsonl'
+$test = 'datasets\training-exports\qwen3_json\r2\grounded_vqa_test.jsonl'
+$validation = 'datasets\training-exports\qwen3_json\r2\grounded_vqa_val.jsonl'
 
 function Invoke-Step([string]$name, [scriptblock]$command) {
     Write-Output "[$(Get-Date -Format s)] $name"

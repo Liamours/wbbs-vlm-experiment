@@ -29,7 +29,7 @@ $config = if ($ConfigPath) {
 if (-not (Test-Path -LiteralPath $config)) {
     throw "Missing configuration: $config"
 }
-$exports = 'datasets\model_exports\qwen3_json\r3'
+$exports = 'datasets\training-exports\qwen3_json\r3'
 $run = (Get-Content -LiteralPath $config -Raw | ConvertFrom-Json).runtime.output_dir
 $results = $run -replace '^models', 'results\inferences'
 if ($results -eq $run) { throw "Run directory must be under models: $run" }

@@ -1,8 +1,8 @@
 {
   "model_id": "google/paligemma-3b-pt-224",
   "task": "grounded_vqa",
-  "train_jsonl": "datasets/model_exports/r1/anatomy_grounded_vqa_train.jsonl",
-  "eval_jsonl": "datasets/model_exports/r1/anatomy_grounded_vqa_val.jsonl",
+  "train_jsonl": "datasets/training-exports/r1/anatomy_grounded_vqa_train.jsonl",
+  "eval_jsonl": "datasets/training-exports/r1/anatomy_grounded_vqa_val.jsonl",
   "quantization": "4bit",
   "adapter": {
     "method": "lora",
