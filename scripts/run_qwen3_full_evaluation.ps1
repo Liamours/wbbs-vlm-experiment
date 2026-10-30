@@ -8,7 +8,7 @@ $predict = Join-Path $root '.venv\Scripts\qwen3vl-predict.exe'
 $evaluate = Join-Path $root '.venv\Scripts\wbbs-evaluate-qwen3.exe'
 $audit = Join-Path $root '.venv\Scripts\wbbs-audit-qwen3.exe'
 $config = "$root\configs\qwen3vl_r1_grounded_vqa_4050.json"
-$adapter = 'models\r1-grounded-vqa-qwen3vl-2b-json'
+$adapter = 'models\r1-qwen3vl\r1-grounded-vqa-qwen3vl-2b-json'
 $results = $adapter -replace '^models', 'results\inferences'
 New-Item -ItemType Directory -Force $results | Out-Null
 $test = 'datasets\training-exports\qwen3_json\r1\grounded_vqa_test.jsonl'

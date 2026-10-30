@@ -18,7 +18,7 @@ def read_json(path: Path):
 
 
 def r1_pilot_curve() -> dict:
-    state = read_json(ROOT / "models/r1-grounded-vqa-qwen3vl-2b-json/training_state.json")
+    state = read_json(ROOT / "models/r1-qwen3vl/r1-grounded-vqa-qwen3vl-2b-json/training_state.json")
     return {
         "run": "r1-grounded-vqa-qwen3vl-2b-json",
         "description": "R1 grounded_vqa, 1000-step JSON-schema pilot, balanced_family_class sampling",
@@ -29,9 +29,9 @@ def r1_pilot_curve() -> dict:
 
 def calibration_comparison() -> dict:
     runs = {
-        "tags_unbalanced_25step": "models/calibration/qwen3vl-r1-grounded-vqa",
-        "json_balanced_25step": "models/calibration/qwen3vl-r1-grounded-vqa-json-balanced",
-        "tags_balanced_25step": "models/calibration/qwen3vl-r1-grounded-vqa-tags-balanced",
+        "tags_unbalanced_25step": "models/r1-qwen3vl/calibration/qwen3vl-r1-grounded-vqa",
+        "json_balanced_25step": "models/r1-qwen3vl/calibration/qwen3vl-r1-grounded-vqa-json-balanced",
+        "tags_balanced_25step": "models/r1-qwen3vl/calibration/qwen3vl-r1-grounded-vqa-tags-balanced",
     }
     result = {}
     for label, rel in runs.items():
@@ -74,7 +74,7 @@ def epoch_selection(run_dir: str, model_label: str) -> dict:
 def incomplete_or_anomalous_runs() -> list[dict]:
     findings = []
 
-    v2_progress = read_json(ROOT / "models/r3-unified-qwen3vl-2b-2epoch-4050-v2/training_progress.json")
+    v2_progress = read_json(ROOT / "models/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-4050-v2/training_progress.json")
     if v2_progress:
         findings.append({
             "run": "r3-unified-qwen3vl-2b-2epoch-4050-v2",
@@ -86,7 +86,7 @@ def incomplete_or_anomalous_runs() -> list[dict]:
             "rows_per_second_on_4050": v2_progress.get("rows_per_second"),
         })
 
-    smoke_progress = read_json(ROOT / "models/r3-multitask-qwen3vl-2b-smoke-4050/training_progress.json")
+    smoke_progress = read_json(ROOT / "models/r3-qwen3vl/r3-multitask-qwen3vl-2b-smoke-4050/training_progress.json")
     if smoke_progress:
         nan_steps = [entry["step"] for entry in smoke_progress.get("validation_history", []) if entry.get("loss") != entry.get("loss")]
         if nan_steps:
@@ -106,8 +106,8 @@ def main() -> None:
     report = {
         "r1_pilot_validation_curve": r1_pilot_curve(),
         "r1_calibration_comparison_25step": calibration_comparison(),
-        "r3_qwen3vl_epoch_selection": epoch_selection("models/r3-unified-qwen3vl-2b-2epoch-5070", "Qwen3-VL-2B-Instruct"),
-        "r3_paligemma_epoch_selection": epoch_selection("models/r3-multitask-paligemma-3b-2epoch-5070", "PaliGemma-3B"),
+        "r3_qwen3vl_epoch_selection": epoch_selection("models/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070", "Qwen3-VL-2B-Instruct"),
+        "r3_paligemma_epoch_selection": epoch_selection("models/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070", "PaliGemma-3B"),
         "incomplete_or_anomalous_runs": incomplete_or_anomalous_runs(),
     }
 
