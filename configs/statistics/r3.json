@@ -1,0 +1,113 @@
+{
+  "seed": 20260722,
+  "resamples": 2000,
+  "confidence_level": 0.95,
+  "rounding_decimals": 6,
+  "reproduction_tolerance": 1e-06,
+  "strict_archived_intervals": true,
+  "output_directory": "results/analyses/metrics/r3-statistics",
+  "log_directory": "results/logs/r3-statistics",
+  "manifest": {
+    "path": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+    "sha256": "e8ef7ff57600bd17bc92d45f3f63c076d6df2a8844cbdac5830dd84d739d8e9a",
+    "parity_path": "datasets/training-exports/qwen3_json/r3-20260723/multitask_test.jsonl",
+    "parity_sha256": "f0c5f5dcbe8d338d45417897740293f21910affeca1898af0581134efe610ea9",
+    "expected_rows": 3754,
+    "expected_patients": 281
+  },
+  "patient_splits": {
+    "path": "datasets/releases/r3/patient_splits.jsonl",
+    "sha256": "3ff5dc3a40807008a60bdb274c4ae00e71a960939c688ce19b0c9b00b25e3823",
+    "split": "test"
+  },
+  "class_count_manifests": {
+    "train": "datasets/training-exports/qwen3_json/r3/multitask_train.jsonl",
+    "val": "datasets/training-exports/qwen3_json/r3/multitask_val.jsonl",
+    "test": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl"
+  },
+  "archive": {
+    "path": "results/inferences/r3-reported/wbbs-r3-full-results.zip",
+    "sha256": "35c8d105f3c7c57059e5b3e00d7abd2ea6a2d50b83e69dd39f11aea3ace43b7d",
+    "root": "wbbs-r3-full-results"
+  },
+  "sources": [
+    {
+      "name": "qwen3vl",
+      "label": "Qwen3-VL-2B-Instruct",
+      "kind": "model",
+      "predictions": {
+        "archive_member": "qwen3vl/inference/best_test_predictions.jsonl",
+        "sha256": "c4c93a0519f30432441002cee0718e7dd30e88afbbaf845619bd25bef0bc0bf0"
+      },
+      "reference_metrics": {"archive_member": "qwen3vl/metrics/best_test_metrics_full.json"}
+    },
+    {
+      "name": "paligemma",
+      "label": "PaliGemma-3B-pt-224",
+      "kind": "model",
+      "predictions": {
+        "archive_member": "paligemma_multitask/inference/best_test_predictions.jsonl",
+        "sha256": "07a3d982aa53203e1b8fc2b3e75f1c7a6df94038ed3949e4282f7e0f5883115f"
+      },
+      "reference_metrics": {"archive_member": "paligemma_multitask/metrics/best_test_metrics.json"},
+      "reference_intervals": {"archive_member": "paligemma_multitask/metrics/best_test_bootstrap_confidence_intervals.json"}
+    },
+    {
+      "name": "question_only",
+      "label": "Question only (no image)",
+      "kind": "control",
+      "predictions": {
+        "path": "results/analyses/metrics/r3-multitask-no-image-controls/prompt_only/test/predictions.jsonl",
+        "sha256": "0dcd688f8e27730d3e28e9985fffafc8779139faacf6f74b1883254fe8569cb8"
+      },
+      "reference_metrics": {"path": "results/analyses/metrics/r3-multitask-no-image-controls/prompt_only/test/metrics.json"}
+    },
+    {
+      "name": "majority",
+      "label": "Majority class (no image)",
+      "kind": "control",
+      "predictions": {
+        "path": "results/analyses/metrics/r3-multitask-no-image-controls/majority/test/predictions.jsonl",
+        "sha256": "1a452e692f8868b11f2e99f43a4e0ab9cde75e8b5b44fb017d0a44624e4c6c79"
+      },
+      "reference_metrics": {"path": "results/analyses/metrics/r3-multitask-no-image-controls/majority/test/metrics.json"}
+    }
+  ],
+  "comparisons": [
+    {"name": "qwen3vl_vs_paligemma", "first": "qwen3vl", "second": "paligemma", "tables": ["table5", "table6", "table7"]},
+    {"name": "qwen3vl_vs_question_only", "first": "qwen3vl", "second": "question_only", "tables": ["table8"]},
+    {"name": "paligemma_vs_question_only", "first": "paligemma", "second": "question_only", "tables": ["table8"]}
+  ],
+  "holm_excluded_metrics": ["hard_label_auc"],
+  "tables": {
+    "table5": {
+      "title": "Answer metrics",
+      "metrics": {
+        "vqa": ["accuracy", "balanced_accuracy", "hard_label_auc", "macro_f1"],
+        "grounded_vqa": ["accuracy", "balanced_accuracy", "hard_label_auc", "macro_f1"]
+      }
+    },
+    "table6": {
+      "title": "Localization metrics",
+      "metrics": {
+        "grounding": ["mean_iou", "iou_at_0_5", "strict_grounding_accuracy", "valid_output_rate"],
+        "grounded_vqa": ["mean_iou", "iou_at_0_5", "strict_grounded_accuracy", "valid_output_rate"]
+      }
+    },
+    "table7": {
+      "title": "Class-specific metrics",
+      "metrics": {
+        "vqa": ["normal_precision", "specificity", "normal_f1", "abnormal_precision", "sensitivity", "abnormal_f1"],
+        "grounded_vqa": ["normal_precision", "specificity", "normal_f1", "abnormal_precision", "sensitivity", "abnormal_f1"]
+      }
+    },
+    "table8": {
+      "title": "No-image controls against the fine-tuned models",
+      "metrics": {
+        "vqa": ["accuracy", "balanced_accuracy", "hard_label_auc", "sensitivity", "specificity", "abnormal_f1"],
+        "grounding": ["mean_iou", "iou_at_0_5", "strict_grounding_accuracy"],
+        "grounded_vqa": ["accuracy", "balanced_accuracy", "hard_label_auc", "sensitivity", "specificity", "abnormal_f1", "mean_iou", "iou_at_0_5", "strict_grounded_accuracy"]
+      }
+    }
+  }
+}

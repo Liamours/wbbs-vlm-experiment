@@ -1,0 +1,119 @@
+{
+  "seed": 20260722,
+  "resamples": 2000,
+  "confidence_level": 0.95,
+  "rounding_decimals": 6,
+  "reproduction_tolerance": 1e-06,
+  "strict_archived_intervals": true,
+  "output_directory": "results/analyses/metrics/r3-rerun-spread",
+  "log_directory": "results/logs/r3-statistics",
+  "manifest": {
+    "path": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+    "sha256": "e8ef7ff57600bd17bc92d45f3f63c076d6df2a8844cbdac5830dd84d739d8e9a",
+    "parity_path": "datasets/training-exports/qwen3_json/r3-20260723/multitask_test.jsonl",
+    "parity_sha256": "f0c5f5dcbe8d338d45417897740293f21910affeca1898af0581134efe610ea9",
+    "expected_rows": 3754,
+    "expected_patients": 281
+  },
+  "patient_splits": {
+    "path": "datasets/releases/r3/patient_splits.jsonl",
+    "sha256": "3ff5dc3a40807008a60bdb274c4ae00e71a960939c688ce19b0c9b00b25e3823",
+    "split": "test"
+  },
+  "class_count_manifests": {
+    "train": "datasets/training-exports/qwen3_json/r3/multitask_train.jsonl",
+    "val": "datasets/training-exports/qwen3_json/r3/multitask_val.jsonl",
+    "test": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl"
+  },
+  "archive": {
+    "path": "results/inferences/r3-reported/wbbs-r3-full-results.zip",
+    "sha256": "35c8d105f3c7c57059e5b3e00d7abd2ea6a2d50b83e69dd39f11aea3ace43b7d",
+    "root": "wbbs-r3-full-results"
+  },
+  "sources": [
+    {
+      "name": "qwen3vl",
+      "label": "Qwen3-VL-2B-Instruct",
+      "kind": "model",
+      "predictions": {
+        "archive_member": "qwen3vl/inference/best_test_predictions.jsonl",
+        "sha256": "c4c93a0519f30432441002cee0718e7dd30e88afbbaf845619bd25bef0bc0bf0"
+      },
+      "reference_metrics": {
+        "archive_member": "qwen3vl/metrics/best_test_metrics_full.json"
+      }
+    },
+    {
+      "name": "qwen3vl_rerun",
+      "label": "Qwen3-VL-2B-Instruct, rerun of the same adapter",
+      "kind": "model",
+      "predictions": {
+        "path": "results/inferences/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070/evaluation/best/test/predictions.jsonl",
+        "sha256": "a121ce69ae73c73e589c4047a5379596b1d1d1d2e482c83d98434ffc83c43110"
+      }
+    },
+    {
+      "name": "qwen3vl_rerun_4050",
+      "label": "Qwen3-VL-2B-Instruct, rerun on the 4050",
+      "kind": "model",
+      "predictions": {
+        "path": "results/inferences/r3-qwen3vl/qwen3vl-4050-hardware-check/pred_4050_full_batch8.jsonl",
+        "sha256": "d441d94b9ed7fadf08f92f97f7fbed623221705759c9e66e2405a55e50b6c92b"
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "name": "reported_vs_rerun",
+      "first": "qwen3vl",
+      "second": "qwen3vl_rerun",
+      "tables": [
+        "rerun"
+      ]
+    },
+    {
+      "name": "reported_vs_rerun_4050",
+      "first": "qwen3vl",
+      "second": "qwen3vl_rerun_4050",
+      "tables": [
+        "rerun"
+      ]
+    },
+    {
+      "name": "rerun_vs_rerun_4050",
+      "first": "qwen3vl_rerun",
+      "second": "qwen3vl_rerun_4050",
+      "tables": [
+        "rerun"
+      ]
+    }
+  ],
+  "holm_excluded_metrics": [],
+  "tables": {
+    "rerun": {
+      "title": "Spread between three scored test passes of the same adapter",
+      "metrics": {
+        "vqa": [
+          "accuracy",
+          "balanced_accuracy",
+          "sensitivity",
+          "specificity"
+        ],
+        "grounding": [
+          "mean_iou",
+          "iou_at_0_5",
+          "strict_grounding_accuracy"
+        ],
+        "grounded_vqa": [
+          "accuracy",
+          "balanced_accuracy",
+          "sensitivity",
+          "specificity",
+          "mean_iou",
+          "iou_at_0_5",
+          "strict_grounded_accuracy"
+        ]
+      }
+    }
+  }
+}
