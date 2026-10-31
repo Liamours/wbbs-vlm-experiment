@@ -1,0 +1,49 @@
+{
+  "split": "val",
+  "source_manifest": "datasets/training-exports/qwen3_json/r3/multitask_val.jsonl",
+  "source_checksums": "datasets/training-exports/qwen3_json/r3/SHA256SUMS.txt",
+  "expected_rows": 3853,
+  "output_dir": "results/analyses/blind-image",
+  "log_dir": "results/logs/r3-blind-image",
+  "blank_fill": [0, 0, 0],
+  "smoke_rows": 32,
+  "seed": 42,
+  "max_new_tokens": 96,
+  "min_free_disk_gb": 2,
+  "min_free_vram_mb": 4096,
+  "poll_seconds": 60,
+  "smoke_poll_seconds": 5,
+  "blocked_processes": [
+    "firefox", "chrome", "msedge", "brave", "opera", "vivaldi",
+    "Code", "cursor", "devenv", "idea64", "pycharm64", "rider64", "studio64",
+    "WINWORD", "EXCEL", "POWERPNT", "OUTLOOK", "ms-teams", "Teams", "slack", "Discord", "Zoom", "obs64", "steam"
+  ],
+  "models": {
+    "qwen3vl": {
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_multitask_2epoch_5070_fast.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070/best",
+      "predict_entry": "qwen3vl-predict",
+      "base_snapshot_dir": "results/weights/base/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots",
+      "batch_size": 8,
+      "real_image_validation_metrics": "results/inferences/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070/evaluation/best/validation/metrics.json",
+      "reference_timing": {
+        "rows_per_second": 0.634,
+        "measured_on": "RTX 4050 (folder qwen3vl-4050-hardware-check), real images, locked test split of 3754 rows, batch 8, 2026-08-08",
+        "measured_on_this_gpu": true
+      }
+    },
+    "paligemma": {
+      "config": "repositories/wbbs-vqa_vgrounding/configs/paligemma_260726_0042.json",
+      "adapter": "results/weights/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070/best",
+      "predict_entry": "wbbs-predict",
+      "base_snapshot_dir": "results/weights/base/hub/models--google--paligemma-3b-pt-224/snapshots",
+      "batch_size": 8,
+      "real_image_validation_metrics": "results/inferences/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070/evaluation/best/validation/metrics.json",
+      "reference_timing": {
+        "rows_per_second": 2.292,
+        "measured_on": "RTX 5070 Ti, real images, locked test split of 3754 rows, batch 8, 2026-07-26",
+        "measured_on_this_gpu": false
+      }
+    }
+  }
+}
