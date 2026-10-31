@@ -13,7 +13,7 @@
     "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
   },
   "runtime": {
-    "output_dir": "models/r3-unified-qwen3vl-2b-2epoch-5070-v2",
+    "output_dir": "results/weights/r3-unified-qwen3vl-2b-2epoch-5070-v2",
     "batch_size": 1,
     "gradient_accumulation": 8,
     "learning_rate": 0.00005,

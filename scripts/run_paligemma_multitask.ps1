@@ -19,8 +19,8 @@ $evaluate = Join-Path $root '.venv\Scripts\wbbs-evaluate-qwen3.exe'
 $config = "$root\configs\paligemma_260726_0042.json"
 $exports = 'datasets\training-exports\qwen3_json\r3'
 $run = (Get-Content -LiteralPath $config -Raw | ConvertFrom-Json).runtime.output_dir
-$results = $run -replace '^models', 'results\inferences'
-if ($results -eq $run) { throw "Run directory must be under models: $run" }
+$results = $run -replace '^results\\weights', 'results\inferences'
+if ($results -eq $run) { throw "Run directory must be under results\weights: $run" }
 $validation = "$exports\multitask_val.jsonl"
 $test = "$exports\multitask_test.jsonl"
 $maxNewTokens = 96

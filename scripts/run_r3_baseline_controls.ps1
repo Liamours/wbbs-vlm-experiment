@@ -9,7 +9,7 @@ $python = Join-Path $root '.venv\Scripts\python.exe'
 & $python -m analysis.baseline_controls `
     --train datasets\training-exports\qwen3_json\r3\multitask_train.jsonl `
     --validation datasets\training-exports\qwen3_json\r3\multitask_val.jsonl `
-    --output results\metrics\r3-multitask-no-image-controls
+    --output results\analyses\metrics\r3-multitask-no-image-controls
 if ($LASTEXITCODE -ne 0) {
     throw "R3 no-image controls failed with exit code $LASTEXITCODE"
 }

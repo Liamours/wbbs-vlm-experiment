@@ -12,7 +12,7 @@
     "target_modules": ["q_proj", "v_proj"]
   },
   "runtime": {
-    "output_dir": "models/r3-paligemma/r3-grounded-vqa-paligemma-3b-2epoch-5070",
+    "output_dir": "results/weights/r3-paligemma/r3-grounded-vqa-paligemma-3b-2epoch-5070",
     "batch_size": 1,
     "gradient_accumulation": 16,
     "learning_rate": 0.0001,

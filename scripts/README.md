@@ -19,7 +19,7 @@ without duplicating image bytes and converts each source segmentation RLE to a
 tight grounding box.
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding --with pyarrow python repo\wbbs-vqa_vgrounding\scripts\standardize_heal_medvqa.py
+uv run --project repositories\wbbs-vqa_vgrounding --with pyarrow python repositories\wbbs-vqa_vgrounding\scripts\standardize_heal_medvqa.py
 ```
 
 ## PathVQA
@@ -37,7 +37,7 @@ To standardize the image-embedded Parquet release without extracting duplicate
 image files:
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding --with pyarrow python repo\wbbs-vqa_vgrounding\scripts\standardize_pathvqa.py
+uv run --project repositories\wbbs-vqa_vgrounding --with pyarrow python repositories\wbbs-vqa_vgrounding\scripts\standardize_pathvqa.py
 ```
 
 ## MedSG-Bench text and labels only
@@ -55,7 +55,7 @@ The standardizer preserves the image references and box labels but deliberately
 does not validate image files, because this snapshot excludes the ZIP archives.
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding python repo\wbbs-vqa_vgrounding\scripts\standardize_medsg_bench.py
+uv run --project repositories\wbbs-vqa_vgrounding python repositories\wbbs-vqa_vgrounding\scripts\standardize_medsg_bench.py
 ```
 
 ## SLAKE standardization
@@ -64,8 +64,8 @@ After extracting the official archive to `external/slake/raw`, export the three
 SLAKE splits to the repository's comparison-v1 schema:
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding python repo\wbbs-vqa_vgrounding\scripts\standardize_slake.py
-uv run --project repo\wbbs-vqa_vgrounding python -m analysis.benchmark `
+uv run --project repositories\wbbs-vqa_vgrounding python repositories\wbbs-vqa_vgrounding\scripts\standardize_slake.py
+uv run --project repositories\wbbs-vqa_vgrounding python -m analysis.benchmark `
   --standard-file datasets/benchmarks/slake.standard.jsonl `
   --release-name slake `
   --output-dir results/analyses/dataset-audits/slake
@@ -95,14 +95,14 @@ and a conflict flag. Generate a smoke release first, then
 the complete release:
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding python repo\wbbs-vqa_vgrounding\scripts\build_r2_diversified.py --input-release datasets/releases/r1 --output-dir datasets/releases/r2_sample --limit 200
-uv run --project repo\wbbs-vqa_vgrounding python repo\wbbs-vqa_vgrounding\scripts\build_r2_diversified.py --input-release datasets/releases/r1 --output-dir datasets/releases/r2
+uv run --project repositories\wbbs-vqa_vgrounding python repositories\wbbs-vqa_vgrounding\scripts\build_r2_diversified.py --input-release datasets/releases/r1 --output-dir datasets/releases/r2_sample --limit 200
+uv run --project repositories\wbbs-vqa_vgrounding python repositories\wbbs-vqa_vgrounding\scripts\build_r2_diversified.py --input-release datasets/releases/r1 --output-dir datasets/releases/r2
 ```
 
 Benchmark and compare the complete release:
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding python -m analysis.benchmark --release-dir datasets/releases/r2 --release-name wbbs-r2 --output-dir results/analyses/dataset-audits/wbbs-r2
+uv run --project repositories\wbbs-vqa_vgrounding python -m analysis.benchmark --release-dir datasets/releases/r2 --release-name wbbs-r2 --output-dir results/analyses/dataset-audits/wbbs-r2
 ```
 
 The combined comparison tables are written to
@@ -117,8 +117,8 @@ ensures every canonical image is present in at least one selected task row.
 type and whether answer, classification, and/or box locations are required.
 
 ```powershell
-uv run --project repo\wbbs-vqa_vgrounding python repo\wbbs-vqa_vgrounding\scripts\build_r3_compact.py --input-release datasets/releases/r2 --output-dir datasets/releases/r3 --fraction 0.15
-uv run --project repo\wbbs-vqa_vgrounding python -m analysis.benchmark --release-dir datasets/releases/r3 --release-name wbbs-r3 --output-dir results/analyses/dataset-audits/wbbs-r3
+uv run --project repositories\wbbs-vqa_vgrounding python repositories\wbbs-vqa_vgrounding\scripts\build_r3_compact.py --input-release datasets/releases/r2 --output-dir datasets/releases/r3 --fraction 0.15
+uv run --project repositories\wbbs-vqa_vgrounding python -m analysis.benchmark --release-dir datasets/releases/r3 --release-name wbbs-r3 --output-dir results/analyses/dataset-audits/wbbs-r3
 ```
 
 ## WBBS R3 fast Qwen3-VL baseline

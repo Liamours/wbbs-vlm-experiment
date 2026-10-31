@@ -10,7 +10,7 @@
     "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
   },
   "runtime": {
-    "output_dir": "models/r1-qwen3vl/preflight/qwen3vl-r1-grounded-vqa-accumulation",
+    "output_dir": "results/weights/r1-qwen3vl/preflight/qwen3vl-r1-grounded-vqa-accumulation",
     "batch_size": 1,
     "gradient_accumulation": 8,
     "learning_rate": 0.00002,

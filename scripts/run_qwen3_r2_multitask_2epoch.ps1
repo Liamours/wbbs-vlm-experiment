@@ -13,9 +13,9 @@ $config = "$root\configs\qwen3vl_r2_multitask_2epoch_4050.json"
 $release = 'datasets\releases\r2'
 $exports = 'datasets\training-exports\qwen3_json\r2'
 $imageRoot = 'datasets\sources\bs80k-imaging-raw'
-$run = 'models\r2-multitask-qwen3vl-2b-json-2epoch'
-$results = $run -replace '^models', 'results\inferences'
-if ($results -eq $run) { throw "Run directory must be under models: $run" }
+$run = 'results\weights\r2-multitask-qwen3vl-2b-json-2epoch'
+$results = $run -replace '^results\\weights', 'results\inferences'
+if ($results -eq $run) { throw "Run directory must be under results\weights: $run" }
 $validation = "$exports\multitask_val.jsonl"
 $test = "$exports\multitask_test.jsonl"
 
