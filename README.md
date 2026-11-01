@@ -4,7 +4,7 @@ Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded vi
 
 ## The benchmark
 
-ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior scan, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
+ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior images, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
 
 | Task | Required output | Train | Validation | Test | Total |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -48,7 +48,7 @@ Locked test split. Accuracy is high because 94.6% of the source labels are norma
 | Qwen3-VL-2B-Instruct | Grounded VQA | 0.913 | 0.991 | 0.951 | 0.526 | 0.087 | 0.149 |
 | PaliGemma-3B-pt-224 | Grounded VQA | 0.910 | 0.996 | 0.951 | 0.600 | 0.052 | 0.096 |
 
-![Predictions of both models on two grounded VQA test examples](docs/figures/grounding-predictions.png)
+![Predictions of both models on two grounded VQA test instances](docs/figures/grounding-predictions.png)
 
 PaliGemma's patient-cluster bootstrap 95% intervals (2,000 resamples, 281 test patients): VQA balanced accuracy 0.511 to 0.561, localization IoU at 0.5 0.755 to 0.815, grounded VQA strict accuracy 0.666 to 0.734. The two models differ in image input, so the table does not rank model families.
 
