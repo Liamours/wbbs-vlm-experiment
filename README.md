@@ -89,7 +89,7 @@ The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places
 ```powershell
 uv run python scripts/compute_r3_statistics.py
 uv run python scripts/compute_r3_supplementary.py
-.\scriptsun_blind_image_check.ps1
+.\scripts\run_blind_image_check.ps1
 ```
 
 ## Reproduce
