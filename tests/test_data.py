@@ -14,7 +14,7 @@ def test_grounding_uses_paligemma_coordinate_order(tmp_path: Path):
         encoding="utf-8",
     )
     example = load_examples(tmp_path / "rows.jsonl", "grounding")[0]
-    assert example.prompt == "detect cat"
+    assert example.prompt == "<image> detect cat"
     assert example.target == "<loc0020><loc0010><loc0040><loc0030> cat"
 
 
