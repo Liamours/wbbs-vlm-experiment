@@ -21,6 +21,7 @@ from postprocess.qwen import parse_qwen_json_prediction, parse_qwen_multitask_js
 from preprocess.canonical import read_jsonl
 
 from .qwen_config import QwenExperiment, load_qwen_experiment
+from .sampling import class_balanced_epoch
 
 
 TAG_SYSTEM_PROMPT = (
@@ -203,8 +204,7 @@ def _train_epochs(config: QwenExperiment, limit_examples: int | None, resume: bo
     total_rows = len(source_rows) * config.runtime.epochs
     with tqdm(total=total_rows, initial=resumed_rows, desc="Training", unit="row") as progress:
         for epoch in range(start_epoch, config.runtime.epochs + 1):
-            rows = list(source_rows)
-            random.Random(config.runtime.seed + epoch - 1).shuffle(rows)
+            rows = _epoch_rows(source_rows, config, epoch)
             accumulated = 0
             row_start = start_row if epoch == start_epoch else 0
             epoch_loss = epoch_loss_at_resume if epoch == start_epoch else 0.0
@@ -273,6 +273,10 @@ def _train_epochs(config: QwenExperiment, limit_examples: int | None, resume: bo
                 }
             )
             _write_epoch_progress(config, epoch_records)
+            if config.runtime.stop_after_epoch == epoch:
+                _mark_resume_complete(config, optimizer_steps)
+                print(f"stopped_after_epoch={epoch} adapter={checkpoint}", flush=True)
+                return
             if epoch < config.runtime.epochs:
                 _save_resume_checkpoint(config, model, optimizer, scheduler, epoch + 1, 0, 0.0, optimizer_steps, source_rows)
         start_row = 0
@@ -282,6 +286,15 @@ def _train_epochs(config: QwenExperiment, limit_examples: int | None, resume: bo
     _write_epoch_state(config, source_rows, epoch_records)
     _mark_resume_complete(config, optimizer_steps)
     print(f"saved_latest_adapter={latest}", flush=True)
+
+
+def _epoch_rows(source_rows: list[dict[str, Any]], config: QwenExperiment, epoch: int) -> list[dict[str, Any]]:
+    seed = config.runtime.seed + epoch - 1
+    if config.sampling.mode == "class_balanced":
+        return class_balanced_epoch(source_rows, seed)
+    rows = list(source_rows)
+    random.Random(seed).shuffle(rows)
+    return rows
 
 
 def predict(

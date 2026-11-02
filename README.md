@@ -25,7 +25,7 @@ Qwen3-VL-2B-Instruct and PaliGemma-3B-pt-224 were fine-tuned with LoRA (4-bit NF
 
 ## Results
 
-Locked test split. Accuracy is high because 94.6% of the source labels are normal; balanced accuracy and abnormal-class F1 show how little of the minority class the models recover.
+Test split. Accuracy is high because 94.6% of the source labels are normal; balanced accuracy and abnormal-class F1 show how little of the minority class the models recover.
 
 | Model | Task | Accuracy | Balanced accuracy | Macro-F1 |
 | --- | --- | ---: | ---: | ---: |
@@ -84,13 +84,36 @@ Patient-cluster bootstrap 95% intervals (2,000 resamples, seed 20260722, 281 tes
 | Question-only control | 0.676 (0.632 to 0.716) | 0.666 (0.602 to 0.726) | 0.141 (0.119 to 0.164) | 0 |
 | Majority-class control | 0.500 | 0.500 | 0.049 (0.035 to 0.065) | 0 |
 
-The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places boxes more accurately in grounded VQA (box accuracy higher by 0.067, 95% interval 0.043 to 0.093, Holm p = 0.008). Three test passes of the same Qwen3-VL adapter differ by 0.024 in VQA balanced accuracy, which is three times the difference between the two models. Both models locate bone regions (whose boxes come from template matching) but not hotspots, whose median box is 12 by 10 pixels. With every validation image replaced by a black image, bone-region box accuracy falls from 0.970 to 0.202 (Qwen3-VL) and from 0.896 to 0.260 (PaliGemma-3B), while VQA balanced accuracy changes by 0.031 and 0.028.
+The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places boxes more accurately in grounded VQA (box accuracy higher by 0.067, 95% interval 0.043 to 0.093, Holm p = 0.008). Three prediction runs of the same Qwen3-VL adapter on the test split differ by 0.024 in VQA balanced accuracy, which is three times the difference between the two models. Both models locate bone regions (whose boxes come from template matching) but not hotspots, whose median box is 12 by 10 pixels. With every validation image replaced by a black image, bone-region box accuracy falls from 0.970 to 0.202 (Qwen3-VL) and from 0.896 to 0.260 (PaliGemma-3B), while VQA balanced accuracy changes by 0.031 and 0.028.
 
 ```powershell
 uv run python scripts/compute_r3_statistics.py
 uv run python scripts/compute_r3_supplementary.py
 .\scripts\run_blind_image_check.ps1
 ```
+
+## Score-based AUC
+
+The generated labels give one operating point of the ROC curve, so their balanced accuracy is the hard-label AUC. `training/score.py` gives each VQA and grounded VQA instance a score instead. For every answer sentence of the training split (6 to 12 per class and region level) it computes the probability that the adapter assigns to the output up to the class value, sums the probabilities by class, and takes the log-odds of the positive class (yes or abnormal). The images and the prompt are encoded once per instance and the candidates run as one batch against a copy of the cache. `analysis/score_auc.py` computes the AUC with the patient-cluster intervals of the other tables, over all instances and within each region level, and the paired differences; the question-only control is scored by the log-odds of its classifier.
+
+| System | VQA AUC | Grounded VQA AUC |
+| --- | ---: | ---: |
+| Qwen3-VL-2B-Instruct | 0.788 (0.743 to 0.828) | 0.768 (0.698 to 0.828) |
+| PaliGemma-3B-pt-224 | 0.814 (0.765 to 0.858) | 0.790 (0.711 to 0.854) |
+| Question-only control | 0.768 (0.723 to 0.810) | 0.712 (0.630 to 0.779) |
+| Qwen3-VL-2B-Instruct, black images | 0.784 (0.739 to 0.822) | 0.756 (0.679 to 0.819) |
+| PaliGemma-3B-pt-224, black images | 0.785 (0.745 to 0.822) | 0.768 (0.706 to 0.821) |
+
+Both models are above the control (Holm p from 0.002 to 0.037), the two models do not differ, and replacing every scan by a black image changes no AUC significantly after Holm correction.
+
+```powershell
+uv run --no-sync python -m training.score --config configs/score_auc_261102.json --model qwen3vl --split validation --limit 64
+uv run --no-sync python -m training.score --config configs/score_auc_261102.json --model qwen3vl --split test
+uv run --no-sync python -m training.score --config configs/score_auc_261102.json --model paligemma --split test_blind
+uv run --no-sync python -m analysis.score_auc --config configs/score_auc_261102.json
+```
+
+`scripts/run_queue.py` runs such stages one after another, with a log, a state file and an ETA, and resumes after an interruption (`configs/queue_261102.json`).
 
 ## Reproduce
 

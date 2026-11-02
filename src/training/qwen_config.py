@@ -10,7 +10,7 @@ from typing import Literal
 
 TaskName = Literal["vqa", "grounding", "grounded_vqa", "multitask"]
 OutputSchema = Literal["tags", "json", "multitask_json"]
-SamplingMode = Literal["uniform", "balanced_family_class", "epoch_uniform"]
+SamplingMode = Literal["uniform", "balanced_family_class", "epoch_uniform", "class_balanced"]
 
 
 @dataclass(frozen=True)
@@ -46,6 +46,7 @@ class QwenRuntimeSettings:
     inference_batch_size: int
     logging_interval: int
     minimum_free_disk_gb: float
+    stop_after_epoch: int | None = None
 
 
 @dataclass(frozen=True)
@@ -110,6 +111,7 @@ def load_qwen_experiment(path: str | Path) -> QwenExperiment:
             inference_batch_size=runtime.get("inference_batch_size", 1),
             logging_interval=runtime.get("logging_interval", 1),
             minimum_free_disk_gb=runtime.get("minimum_free_disk_gb", 10.0),
+            stop_after_epoch=runtime.get("stop_after_epoch"),
         ),
         sampling=QwenSamplingSettings(mode=payload.get("sampling", {}).get("mode", "uniform")),
         selection_metric=payload.get("selection_metric", "validation_loss"),
@@ -128,14 +130,18 @@ def _validate(config: QwenExperiment) -> None:
         raise ValueError(f"Unsupported task: {config.task}")
     if config.output_schema not in {"tags", "json", "multitask_json"}:
         raise ValueError("output_schema must be tags, json, or multitask_json")
-    if config.sampling.mode not in {"uniform", "balanced_family_class", "epoch_uniform"}:
-        raise ValueError("sampling.mode must be uniform, balanced_family_class, or epoch_uniform")
+    if config.sampling.mode not in {"uniform", "balanced_family_class", "epoch_uniform", "class_balanced"}:
+        raise ValueError("sampling.mode must be uniform, balanced_family_class, epoch_uniform, or class_balanced")
     if config.task == "multitask" and config.output_schema != "multitask_json":
         raise ValueError("multitask Qwen experiments require output_schema=multitask_json")
     if config.task != "multitask" and config.output_schema == "multitask_json":
         raise ValueError("multitask_json is only valid for task=multitask")
-    if config.task == "multitask" and config.sampling.mode != "epoch_uniform":
-        raise ValueError("multitask Qwen experiments require sampling.mode=epoch_uniform")
+    if config.task == "multitask" and config.sampling.mode not in {"epoch_uniform", "class_balanced"}:
+        raise ValueError("multitask Qwen experiments require sampling.mode=epoch_uniform or class_balanced")
+    if config.sampling.mode == "class_balanced" and config.runtime.epochs is None:
+        raise ValueError("class_balanced sampling needs an epoch run")
+    if config.runtime.stop_after_epoch is not None and not 1 <= config.runtime.stop_after_epoch <= (config.runtime.epochs or 0):
+        raise ValueError("stop_after_epoch must be between 1 and epochs")
     if config.sampling.mode == "balanced_family_class" and config.runtime.gradient_accumulation % 4:
         raise ValueError("balanced_family_class requires gradient_accumulation divisible by 4")
     if config.runtime.batch_size != 1:

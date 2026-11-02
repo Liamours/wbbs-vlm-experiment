@@ -1,0 +1,163 @@
+{
+  "train_manifest": "datasets/training-exports/qwen3_json/r3/multitask_train.jsonl",
+  "checksums": "datasets/training-exports/qwen3_json/r3/SHA256SUMS.txt",
+  "splits": {
+    "validation": {
+      "manifest": "datasets/training-exports/qwen3_json/r3/multitask_val.jsonl",
+      "scored_rows": 2597
+    },
+    "test": {
+      "manifest": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+      "scored_rows": 2529
+    },
+    "test_blind": {
+      "manifest": "results/analyses/blind-image/manifests/multitask_test_blind.jsonl",
+      "scored_rows": 2529
+    }
+  },
+  "tasks": [
+    "vqa",
+    "grounded_vqa"
+  ],
+  "max_templates": null,
+  "candidate_batch": 24,
+  "log_seconds": 60,
+  "output_dir": "results/analyses/score-auc",
+  "log_dir": "results/logs/r3-score-auc",
+  "min_label_agreement": 0.9,
+  "min_free_vram_mb": 4096,
+  "blocked_processes": [
+    "firefox",
+    "chrome",
+    "msedge",
+    "brave",
+    "opera",
+    "vivaldi",
+    "Code",
+    "cursor",
+    "devenv",
+    "idea64",
+    "pycharm64",
+    "rider64",
+    "studio64",
+    "WINWORD",
+    "EXCEL",
+    "POWERPNT",
+    "OUTLOOK",
+    "ms-teams",
+    "Teams",
+    "slack",
+    "Discord",
+    "Zoom",
+    "obs64",
+    "steam"
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 20260722,
+    "level": 0.95,
+    "expected_patients": 281
+  },
+  "models": {
+    "qwen3vl": {
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_multitask_2epoch_5070_fast.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070/best",
+      "reference_predictions": {
+        "validation": "results/inferences/r3-qwen3vl/r3-unified-qwen3vl-2b-2epoch-5070/evaluation/best/validation/predictions.jsonl",
+        "test": "results/analyses/metrics/r3-baseline-results-standardized/results/qwen3vl/test/predictions.jsonl"
+      }
+    },
+    "paligemma": {
+      "config": "repositories/wbbs-vqa_vgrounding/configs/paligemma_260726_0042.json",
+      "adapter": "results/weights/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070/best",
+      "reference_predictions": {
+        "validation": "results/inferences/r3-paligemma/r3-multitask-paligemma-3b-2epoch-5070/evaluation/best/validation/predictions.jsonl",
+        "test": "results/analyses/metrics/r3-baseline-results-standardized/results/paligemma/test/predictions.jsonl"
+      }
+    },
+    "qwen3vl_blind_trained": {
+      "backend": "qwen3vl",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_blind_image_epoch1_4050.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01",
+      "min_label_agreement": null,
+      "reference_predictions": {
+        "test_blind": "results/inferences/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050/test/predictions.jsonl"
+      }
+    },
+    "qwen3vl_balanced": {
+      "backend": "qwen3vl",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_class_balanced_epoch1_4050.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01",
+      "min_label_agreement": null,
+      "reference_predictions": {
+        "test": "results/inferences/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050/test/predictions.jsonl"
+      }
+    }
+  },
+  "systems": [
+    {
+      "name": "qwen3vl",
+      "model": "qwen3vl",
+      "split": "test"
+    },
+    {
+      "name": "paligemma",
+      "model": "paligemma",
+      "split": "test"
+    },
+    {
+      "name": "qwen3vl_black",
+      "model": "qwen3vl",
+      "split": "test_blind"
+    },
+    {
+      "name": "paligemma_black",
+      "model": "paligemma",
+      "split": "test_blind"
+    },
+    {
+      "name": "qwen3vl_blind_trained",
+      "model": "qwen3vl_blind_trained",
+      "split": "test_blind"
+    },
+    {
+      "name": "qwen3vl_balanced",
+      "model": "qwen3vl_balanced",
+      "split": "test"
+    }
+  ],
+  "pairs": [
+    [
+      "qwen3vl",
+      "paligemma"
+    ],
+    [
+      "qwen3vl",
+      "question_only"
+    ],
+    [
+      "paligemma",
+      "question_only"
+    ],
+    [
+      "qwen3vl",
+      "qwen3vl_black"
+    ],
+    [
+      "paligemma",
+      "paligemma_black"
+    ],
+    [
+      "qwen3vl_blind_trained",
+      "question_only"
+    ],
+    [
+      "qwen3vl",
+      "qwen3vl_blind_trained"
+    ],
+    [
+      "qwen3vl_balanced",
+      "qwen3vl"
+    ]
+  ]
+}

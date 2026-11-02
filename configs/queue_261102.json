@@ -1,0 +1,159 @@
+{
+  "log_dir": "results/logs/r3-queue",
+  "heartbeat_seconds": 300,
+  "min_free_vram_mb": 4096,
+  "min_free_disk_gb": 12,
+  "retries": 2,
+  "blocked_processes": [
+    "firefox",
+    "chrome",
+    "msedge",
+    "brave",
+    "opera",
+    "vivaldi",
+    "Code",
+    "cursor",
+    "devenv",
+    "idea64",
+    "pycharm64",
+    "rider64",
+    "studio64",
+    "WINWORD",
+    "EXCEL",
+    "POWERPNT",
+    "OUTLOOK",
+    "ms-teams",
+    "Teams",
+    "slack",
+    "Discord",
+    "Zoom",
+    "obs64",
+    "steam"
+  ],
+  "stages": [
+    {
+      "name": "score-paligemma-test",
+      "kind": "score",
+      "score_config": "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json",
+      "model": "paligemma",
+      "split": "test"
+    },
+    {
+      "name": "auc-table-1",
+      "kind": "command",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--project",
+        "repositories/wbbs-vqa_vgrounding",
+        "python",
+        "-m",
+        "analysis.score_auc",
+        "--config",
+        "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json"
+      ]
+    },
+    {
+      "name": "score-qwen3vl-black",
+      "kind": "score",
+      "score_config": "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json",
+      "model": "qwen3vl",
+      "split": "test_blind"
+    },
+    {
+      "name": "score-paligemma-black",
+      "kind": "score",
+      "score_config": "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json",
+      "model": "paligemma",
+      "split": "test_blind"
+    },
+    {
+      "name": "auc-table-2",
+      "kind": "command",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--project",
+        "repositories/wbbs-vqa_vgrounding",
+        "python",
+        "-m",
+        "analysis.score_auc",
+        "--config",
+        "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json"
+      ]
+    },
+    {
+      "name": "e2-train",
+      "kind": "train",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_blind_image_epoch1_4050.json",
+      "run_dir": "results/weights/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050",
+      "done_file": "results/weights/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01/adapter_model.safetensors"
+    },
+    {
+      "name": "e2-predict",
+      "kind": "predict",
+      "requires": "e2-train",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_blind_image_epoch1_4050.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01",
+      "input": "results/analyses/blind-image/manifests/multitask_test_blind.jsonl",
+      "expected": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+      "output_dir": "results/inferences/r3-qwen3vl/r3-blind-image-qwen3vl-2b-epoch1-4050/test",
+      "rows": 3754,
+      "batch_size": 8
+    },
+    {
+      "name": "score-e2-blind-trained",
+      "kind": "score",
+      "score_config": "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json",
+      "model": "qwen3vl_blind_trained",
+      "split": "test_blind",
+      "requires": "e2-train"
+    },
+    {
+      "name": "e3-train",
+      "kind": "train",
+      "not_after_local": "2026-11-03T16:00:00",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_class_balanced_epoch1_4050.json",
+      "run_dir": "results/weights/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050",
+      "done_file": "results/weights/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01/adapter_model.safetensors"
+    },
+    {
+      "name": "e3-predict",
+      "kind": "predict",
+      "requires": "e3-train",
+      "config": "repositories/wbbs-vqa_vgrounding/configs/qwen3vl_r3_class_balanced_epoch1_4050.json",
+      "adapter": "results/weights/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050/checkpoints/epoch-01",
+      "input": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+      "expected": "datasets/training-exports/qwen3_json/r3/multitask_test.jsonl",
+      "output_dir": "results/inferences/r3-qwen3vl/r3-class-balanced-qwen3vl-2b-epoch1-4050/test",
+      "rows": 3754,
+      "batch_size": 8
+    },
+    {
+      "name": "score-e3-balanced",
+      "kind": "score",
+      "score_config": "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json",
+      "model": "qwen3vl_balanced",
+      "split": "test",
+      "requires": "e3-train"
+    },
+    {
+      "name": "auc-table-final",
+      "kind": "command",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--project",
+        "repositories/wbbs-vqa_vgrounding",
+        "python",
+        "-m",
+        "analysis.score_auc",
+        "--config",
+        "repositories/wbbs-vqa_vgrounding/configs/score_auc_261102.json"
+      ]
+    }
+  ]
+}

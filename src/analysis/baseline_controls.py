@@ -122,7 +122,7 @@ def _majority_class(task: str, priors: dict[str, Any]) -> str:
     return _mode(counts)
 
 
-def _prompt_class(task: str, prompt: str, priors: dict[str, Any]) -> str:
+def _prompt_scores(task: str, prompt: str, priors: dict[str, Any]) -> dict[str, float]:
     counts: Counter[str] = priors["class_counts"][task]
     if not counts:
         raise ValueError(f"No class prior for task: {task}")
@@ -135,7 +135,27 @@ def _prompt_class(task: str, prompt: str, priors: dict[str, Any]) -> str:
         for token in _tokens(prompt):
             score += math.log((priors["token_counts"][task][label][token] + 1) / denominator)
         scores[label] = score
+    return scores
+
+
+def _prompt_class(task: str, prompt: str, priors: dict[str, Any]) -> str:
+    scores = _prompt_scores(task, prompt, priors)
     return min(scores, key=lambda label: (-scores[label], label))
+
+
+def question_only_scores(train_rows: Iterable[dict[str, Any]], rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Log-odds of the positive class (yes or abnormal) of the question-only control, for the score-based AUC."""
+
+    priors = _build_priors(list(train_rows))
+    positive = {"vqa": ("yes", "no"), "grounded_vqa": ("abnormal", "normal")}
+    result = []
+    for row in rows:
+        task = str(row["task"])
+        if task not in positive:
+            continue
+        scores = _prompt_scores(task, str(row["prompt"]), priors)
+        result.append({"task_id": row["task_id"], "task": task, "region_level": row["region_level"], "patient_id": row["patient_id"], "answer_label": row["answer_label"], "score": scores[positive[task][0]] - scores[positive[task][1]]})
+    return result
 
 
 def _prompt_region(prompt: str, regions: tuple[str, ...]) -> str | None:
