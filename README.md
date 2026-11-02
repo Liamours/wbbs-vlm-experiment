@@ -77,14 +77,14 @@ Predicting the locked test split again with the same Qwen3-VL adapter, without r
 
 Patient-cluster bootstrap 95% intervals (2,000 resamples, seed 20260722, 281 test patients) for the answer and localization summaries, with two controls that never see the image: the majority answer, and a naive Bayes classifier over the question tokens that predicts the median training box of the named region. Balanced accuracy equals the hard-label AUC because each model gives one label per question.
 
-| System | VQA balanced accuracy | Grounded VQA balanced accuracy | Image localization box accuracy (IoU at least 0.50) |
-| --- | ---: | ---: | ---: |
-| Qwen3-VL-2B-Instruct | 0.528 (0.503 to 0.556) | 0.539 (0.509 to 0.578) | 0.857 (0.832 to 0.880) |
-| PaliGemma-3B-pt-224 | 0.535 (0.511 to 0.561) | 0.524 (0.503 to 0.556) | 0.787 (0.755 to 0.815) |
-| Question-only control | 0.676 (0.632 to 0.716) | 0.666 (0.602 to 0.726) | 0.125 (0.106 to 0.146) |
-| Majority-class control | 0.500 | 0.500 | 0.044 (0.031 to 0.058) |
+| System | VQA balanced accuracy | Grounded VQA balanced accuracy | Image localization box accuracy on bone regions (IoU at least 0.50) | Image localization box accuracy on hotspots (IoU at least 0.50) |
+| --- | ---: | ---: | ---: | ---: |
+| Qwen3-VL-2B-Instruct | 0.528 (0.503 to 0.556) | 0.539 (0.509 to 0.578) | 0.958 (0.942 to 0.972) | 0.030 (0.007 to 0.057) |
+| PaliGemma-3B-pt-224 | 0.535 (0.511 to 0.561) | 0.524 (0.503 to 0.556) | 0.877 (0.852 to 0.901) | 0.048 (0.019 to 0.083) |
+| Question-only control | 0.676 (0.632 to 0.716) | 0.666 (0.602 to 0.726) | 0.141 (0.119 to 0.164) | 0 |
+| Majority-class control | 0.500 | 0.500 | 0.049 (0.035 to 0.065) | 0 |
 
-The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places boxes more accurately in grounded VQA (box accuracy higher by 0.067, 95% interval 0.043 to 0.093, Holm p = 0.008). Three test passes of the same Qwen3-VL adapter differ by 0.024 in VQA balanced accuracy, which is three times the difference between the two models. With every validation scan replaced by a black image, box accuracy falls from 0.870 to 0.180 (Qwen3-VL) and from 0.802 to 0.232 (PaliGemma-3B), while VQA balanced accuracy changes by 0.031 and 0.028.
+The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places boxes more accurately in grounded VQA (box accuracy higher by 0.067, 95% interval 0.043 to 0.093, Holm p = 0.008). Three test passes of the same Qwen3-VL adapter differ by 0.024 in VQA balanced accuracy, which is three times the difference between the two models. Both models locate bone regions (whose boxes come from template matching) but not hotspots, whose median box is 12 by 10 pixels. With every validation image replaced by a black image, bone-region box accuracy falls from 0.970 to 0.202 (Qwen3-VL) and from 0.896 to 0.260 (PaliGemma-3B), while VQA balanced accuracy changes by 0.031 and 0.028.
 
 ```powershell
 uv run python scripts/compute_r3_statistics.py

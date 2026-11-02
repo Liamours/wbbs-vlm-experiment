@@ -12,6 +12,7 @@ import json
 import logging
 import re
 import time
+from itertools import product
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Mapping
@@ -21,6 +22,10 @@ import numpy as np
 from metric.cluster_bootstrap import draw_patient_weights, metrics_from_totals, percentile_interval, resample_totals
 from metric.instance_stats import CLASS_LABELS, COLUMNS, judge_row
 from preprocess.canonical import read_jsonl
+
+from metric.grounding import iou
+from metric.qwen import _tag_view
+from postprocess.qwen import parse_qwen_multitask_json_prediction
 
 from .baseline_controls import _build_priors, _prompt_class, _tokens
 from .r3_statistics import InputReader, StatisticsConfig, load_inputs
@@ -43,14 +48,14 @@ def breakdown(config: StatisticsConfig, out: Path) -> dict[str, int]:
                 totals = rows_by_group[(source.name, row["task"], level, group)]
                 for name, value in judged.items():
                     totals[name] += value
-    fields = ["source", "task", "grouping", "group", "n", "positives", "recall", "negatives", "specificity", "targets", "iou_at_0_5", "strict"]
+    fields = ["source", "task", "grouping", "group", "n", "positives", "recall", "negatives", "specificity", "targets", "mean_iou", "iou_at_0_5", "strict"]
     table = []
     for (source, task, grouping, group), t in sorted(rows_by_group.items()):
         record = {"source": source, "task": task, "grouping": grouping, "group": group, "n": int(t["n"])}
         if task in CLASS_TASKS:
             record.update(positives=int(t["pos"]), recall=_ratio(t["tp"], t["pos"]), negatives=int(t["neg"]), specificity=_ratio(t["tn"], t["neg"]))
         if task in ("grounding", "grounded_vqa"):
-            record.update(targets=int(t["targets"]), iou_at_0_5=_ratio(t["iou_hit"], t["targets"]), strict=_ratio(t["strict"], t["n"]))
+            record.update(targets=int(t["targets"]), mean_iou=_ratio(t["iou_sum"], t["targets"]), iou_at_0_5=_ratio(t["iou_hit"], t["targets"]), strict=_ratio(t["strict"], t["n"]))
         table.append(record)
     _write_csv(out / "breakdown.csv", fields, table)
     return {"breakdown_rows": len(table)}
@@ -107,12 +112,64 @@ def decomposition(config: StatisticsConfig, out: Path) -> dict[str, int]:
     return {"decomposition_rows": len(rows)}
 
 
+TARGET_COLUMNS = ("targets", "iou_sum", "iou_at_0_1", "iou_at_0_25", "iou_at_0_5", "center_inside", "distance_sum")
+
+
+def target_matrix(manifest: list[dict[str, Any]], prediction: Mapping[str, Any], task: str, level: str, position: Mapping[str, int]) -> np.ndarray:
+    """Per-patient sums of the localization statistics of every target of one task at one region level (columns: TARGET_COLUMNS)."""
+
+    matrix = np.zeros((len(position), len(TARGET_COLUMNS)))
+    for row in manifest:
+        if row["task"] != task or row.get("region_level") != level:
+            continue
+        raw = prediction[row["task_id"]]
+        parsed = parse_qwen_multitask_json_prediction(raw) if isinstance(raw, str) else {"task": None, "boxes": []}
+        boxes = {_tag_view(b["view"]): b["bbox"] for b in parsed["boxes"] if b["view"] is not None} if parsed["task"] == task else {}
+        for target in row["targets"]:
+            box, truth = boxes.get(_tag_view(target.get("view"))), target["bbox"]
+            score = iou(box, truth) if box is not None else 0.0
+            inside, distance = 0.0, 0.0
+            if box is not None:
+                cx, cy = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
+                inside = float(truth[0] <= cx <= truth[2] and truth[1] <= cy <= truth[3])
+                distance = ((cx - (truth[0] + truth[2]) / 2) ** 2 + (cy - (truth[1] + truth[3]) / 2) ** 2) ** 0.5
+            matrix[position[row["patient_id"]]] += [1, score, score >= 0.1, score >= 0.25, score >= 0.5, inside, distance]
+    return matrix
+
+
+def localization_by_level(config: StatisticsConfig, out: Path) -> dict[str, int]:
+    """Localization of the bone-region and hotspot targets (region levels 'bone_region' and 'metastasis') with IoU criteria from 0.1 to 0.5 and patient-cluster intervals."""
+
+    with InputReader(config) as reader:
+        inputs = load_inputs(config, reader)
+    position = {patient: index for index, patient in enumerate(inputs.patients)}
+    weights = draw_patient_weights(len(inputs.patients), config.resamples, config.seed)
+    rows = []
+    for source in config.sources:
+        prediction = {row["task_id"]: row["prediction"] for row in inputs.predictions[source.name]}
+        for level, task in product(("bone_region", "metastasis"), ("grounding", "grounded_vqa")):
+            matrix = target_matrix(inputs.manifest, prediction, task, level, position)
+            total = matrix.sum(axis=0)
+            boot = weights.astype(np.float64) @ matrix
+            record = {"source": source.name, "level": level, "task": task, "targets": int(total[0]), "mean_iou": round(total[1] / total[0], 4), "mean_center_distance_px": round(total[6] / total[0], 1)}
+            for name, index in (("iou_at_0_1", 2), ("iou_at_0_25", 3), ("iou_at_0_5", 4), ("center_inside_target", 5)):
+                values = boot[:, index] / np.where(boot[:, 0] > 0, boot[:, 0], np.nan)
+                interval = percentile_interval(values, config.confidence_level, config.rounding_decimals)
+                record[name] = round(total[index] / total[0], 4)
+                record[name + "_lower"], record[name + "_upper"] = interval["lower"], interval["upper"]
+            rows.append(record)
+    fields = list(rows[0])
+    _write_csv(out / "localization_by_level.csv", fields, rows)
+    return {"localization_rows": len(rows)}
+
+
 def run(config: StatisticsConfig) -> dict[str, Any]:
     out = config.output_directory.parent / "r3-supplementary"
     out.mkdir(parents=True, exist_ok=True)
     summary: dict[str, Any] = {"output_directory": str(out)}
     summary.update(breakdown(config, out))
     summary.update(decomposition(config, out))
+    summary.update(localization_by_level(config, out))
     (out / "run_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return summary
 
