@@ -4,7 +4,7 @@ Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded vi
 
 ## The benchmark
 
-ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior images, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
+ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior images, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23887845](https://doi.org/10.5281/zenodo.23887845)).
 
 | Task | Required output | Train | Validation | Test | Total |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -94,7 +94,7 @@ uv run python scripts/compute_r3_supplementary.py
 
 ## Reproduce
 
-The code expects a project folder with `datasets/` and `results/weights/` next to `repositories/` (set `WBBS_PROJECT_ROOT` to use another location). The images and model weights are not in this repository. The derived annotations are on Zenodo ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)).
+The code expects a project folder with `datasets/` and `results/weights/` next to `repositories/` (set `WBBS_PROJECT_ROOT` to use another location). The images and model weights are not in this repository. The derived annotations are on Zenodo ([10.5281/zenodo.23887845](https://doi.org/10.5281/zenodo.23887845)).
 
 ```powershell
 uv sync --extra training --extra dev --extra analysis --extra eval
@@ -118,4 +118,4 @@ For research use only, not for clinical decisions. The code is released under th
 
 ## Citation
 
-Cite the dataset record ([10.5281/zenodo.23233758](https://doi.org/10.5281/zenodo.23233758)); CITATION.cff has the entry.
+Cite the dataset record ([10.5281/zenodo.23887845](https://doi.org/10.5281/zenodo.23887845)); CITATION.cff has the entry.
