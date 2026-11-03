@@ -131,7 +131,7 @@ uv run python scripts/score_locked_test.py --expected <multitask_test.jsonl> --p
 
 ## Adapters and predictions
 
-The [v1.1.0 release](https://github.com/Liamours/wbbs-vlm-experiment/releases/tag/v1.1.0) holds the two LoRA adapters that validation selected (`qwen3vl-r3-adapter.zip`, epoch 1, and `paligemma-r3-adapter.zip`, epoch 2), the predictions behind the reported tables (`reported-predictions.zip`, test and validation split of each model), and `SHA256SUMS.txt`. Each adapter follows the terms of its base model: Apache License 2.0 for Qwen3-VL-2B-Instruct and the Gemma Terms of Use for PaliGemma-3B-pt-224. The base models are not included.
+The [v1.1.0 release](https://github.com/Liamours/wbbs-vlm-experiment/releases/tag/v1.1.0) holds the two LoRA adapters that validation selected (`qwen3vl-r3-adapter.zip`, epoch 1, and `paligemma-r3-adapter.zip`, epoch 2), the predictions behind the reported tables (`reported-predictions.zip`, test and validation split of each model), and `SHA256SUMS.txt`. The [v1.2.0 release](https://github.com/Liamours/wbbs-vlm-experiment/releases/tag/v1.2.0) holds the outputs behind the score-based AUC (`analysis-outputs.zip`: scores of both adapters with real and black images, the question-only control scores, AUC and ROC tables, black-image validation predictions, two further Qwen3-VL test predictions, and the statistics tables). Each adapter follows the terms of its base model: Apache License 2.0 for Qwen3-VL-2B-Instruct and the Gemma Terms of Use for PaliGemma-3B-pt-224. The base models are not included.
 
 ## Data
 
