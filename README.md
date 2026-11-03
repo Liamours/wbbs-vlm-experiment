@@ -81,7 +81,7 @@ Patient-cluster bootstrap 95% intervals (2,000 resamples, seed 20260722, 281 tes
 | --- | ---: | ---: | ---: | ---: |
 | Qwen3-VL-2B-Instruct | 0.528 (0.503 to 0.556) | 0.539 (0.509 to 0.578) | 0.958 (0.942 to 0.972) | 0.030 (0.007 to 0.057) |
 | PaliGemma-3B-pt-224 | 0.535 (0.511 to 0.561) | 0.524 (0.503 to 0.556) | 0.877 (0.852 to 0.901) | 0.048 (0.019 to 0.083) |
-| Question-only control | 0.676 (0.632 to 0.716) | 0.666 (0.602 to 0.726) | 0.141 (0.119 to 0.164) | 0 |
+| Question-only control | 0.676 (0.632 to 0.716) | 0.666 (0.602 to 0.726) | 0.140 (0.119 to 0.164) | 0 |
 | Majority-class control | 0.500 | 0.500 | 0.049 (0.035 to 0.065) | 0 |
 
 The two models do not differ on answers (Holm-adjusted p = 1.0). Qwen3-VL places boxes more accurately in grounded VQA (box accuracy higher by 0.067, 95% interval 0.043 to 0.093, Holm p = 0.008). Three prediction runs of the same Qwen3-VL adapter on the test split differ by 0.024 in VQA balanced accuracy, which is three times the difference between the two models. Both models locate bone regions (whose boxes come from template matching) but not hotspots, whose median box is 12 by 10 pixels. With every validation image replaced by a black image, bone-region box accuracy falls from 0.970 to 0.202 (Qwen3-VL) and from 0.896 to 0.260 (PaliGemma-3B), while VQA balanced accuracy changes by 0.031 and 0.028.
