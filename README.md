@@ -1,10 +1,10 @@
 # wbbs-vlm-experiment
 
-Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded visual question answering benchmark for paired anterior and posterior whole-body bone scintigraphy. This repository is part of that research: it builds the benchmark from BS-80K annotations and LIBS-160K question templates, fine-tunes two vision-language models on it, and scores them. The manuscript is under review.
+Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded visual question answering benchmark for paired anterior and posterior whole-body bone scintigraphy. This repository is part of that research: it builds the benchmark from BS-80K annotations and fixed rule-based question templates, fine-tunes two vision-language models on it, and scores them. The manuscript is under review.
 
 ## The benchmark
 
-ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior images, with the outputs it requires. All boxes and answers come from BS-80K annotations, and question wording comes from fixed LIBS-160K templates. The derived annotations are published on Zenodo ([10.5281/zenodo.23887845](https://doi.org/10.5281/zenodo.23887845)).
+ScintiGround-38K has 38,469 instances. One instance is one question or request about one target in one patient's paired anterior and posterior images, with the outputs it requires. All boxes and answers derive from BS-80K annotations (a malignant hotspot makes its bone region abnormal, and an abnormal bone region makes the whole-body view abnormal; the source region label is kept next to the label used), question wording comes from fixed rule-based English templates, and the LIBS-160K caption sentences are kept as provenance text. The instances are a 15% sample of the task rows of the full release (seed `wbbs-r3-compact-v1`) with forced coverage of every referenced image. The derived annotations are published on Zenodo ([10.5281/zenodo.23887845](https://doi.org/10.5281/zenodo.23887845)).
 
 | Task | Required output | Train | Validation | Test | Total |
 | --- | --- | ---: | ---: | ---: | ---: |
