@@ -1,6 +1,6 @@
 # wbbs-vlm-experiment
 
-Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded visual question answering benchmark for paired anterior and posterior whole-body bone scintigraphy. This repository is part of that research: it builds the benchmark from BS-80K annotations and fixed rule-based question templates, fine-tunes two vision-language models on it, and scores them. The manuscript is under review.
+Code, configurations, and evaluation scripts for ScintiGround-38K, a grounded visual question answering benchmark for paired anterior and posterior whole-body bone scintigraphy. This repository is part of that research: it builds the benchmark from BS-80K annotations and fixed rule-based question templates, fine-tunes two vision-language models on it, and scores them. The manuscript is accepted for publication in the Journal of Imaging Informatics in Medicine.
 
 ## The benchmark
 
